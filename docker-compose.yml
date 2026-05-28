@@ -1,0 +1,30 @@
+services:
+  # Отдельный сервис MLflow tracking — изолируем хранилище экспериментов от кода.
+  mlflow:
+    build: .
+    container_name: mh-mlflow
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    restart: unless-stopped
+
+  app:
+    build: .
+    container_name: mh-app
+    depends_on:
+      - mlflow
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    volumes:
+      - ./data:/app/data:ro     
+      - ./models:/app/models     
+
+volumes:
+  mlflow-data:

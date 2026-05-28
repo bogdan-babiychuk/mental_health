@@ -1,11 +1,9 @@
 import mlflow
 import mlflow.sklearn
-from pathlib import Path
 
 EXPERIMENT_NAME = "mental_health_depression"
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DB_PATH = PROJECT_ROOT / "mlflow.db"
-TRACKING_URI = f"sqlite:///{DB_PATH}"
+TRACKING_URI = "http://localhost:5000"
+
 
 def setup_mlflow(experiment_name: str = EXPERIMENT_NAME):
     mlflow.set_tracking_uri(TRACKING_URI)
