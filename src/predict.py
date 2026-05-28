@@ -1,6 +1,7 @@
 from sklearn.base import BaseEstimator
 from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
+
 def get_predict(model: BaseEstimator,
                 X,
                 return_proba:bool = False,
