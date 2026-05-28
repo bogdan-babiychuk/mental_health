@@ -6,27 +6,26 @@ from sklearn.preprocessing import OneHotEncoder, PolynomialFeatures, StandardSca
 
 
 def build_preprocessor(numeric_features: list,
-                       categorical_features: list):
-    numeric_transformer = Pipeline(
-        [
-            ("scaler", StandardScaler()),
-            ("poly", PolynomialFeatures(include_bias=False))
-        ]
-    )
+                         categorical_features: list,
+                         tree: bool = False):
 
-    categorical_transformer = Pipeline(
-        [
-            ("scaler", OneHotEncoder(handle_unknown="ignore", drop="first"))
-        ]
-    )
+      if tree:
+          numeric_transformer = "passthrough"
+      else:
+          numeric_transformer = Pipeline([
+              ("scaler", StandardScaler()),
+              ("poly", PolynomialFeatures(include_bias=False))
+          ])
 
-    preprocessor = ColumnTransformer(
-        [
-            ("num", numeric_transformer, numeric_features),
-            ("cat", categorical_transformer, categorical_features)
-        ]
-    )
-    return preprocessor
+      categorical_transformer = Pipeline([
+          ("onehot", OneHotEncoder(handle_unknown="ignore", drop="first"))
+      ])
+
+      preprocessor = ColumnTransformer([
+          ("num", numeric_transformer, numeric_features),
+          ("cat", categorical_transformer, categorical_features)
+      ])
+      return preprocessor
 
 
 
